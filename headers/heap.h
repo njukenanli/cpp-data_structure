@@ -1,20 +1,24 @@
-struct node {
-public:
-	int s;
-	int e;
-	int v;
-	node(int i, int j, int k) : s(i), e(j), v(k) {};
-};
+#include <vector>
 
 struct heap {
-private:
-	int size;
-	node** tree;
 public:
-	heap(int s, node** t) {
-		tree = t;
-		size = s;
+	struct node {
+	public:
+		int id;
+		int v;
+		node(int i, int j) : id(i), v(j) {};
+	};
+	heap(int cursize, std::vector<node*> t) {
+		tree = std::vector<node*>(cursize);
+		for (int i = 0; i < cursize; i++) {
+			tree[i] = t[i];
+		}
+		size = cursize;
 		construct();
+	}
+	heap() {
+		tree = std::vector<node*>(0);
+		size = 0;
 	}
 	bool comp(node* i, node* j) {
 		return (i->v < j->v);
@@ -75,11 +79,19 @@ public:
 		tree[p] = newnode;
 	}
 	node* delroot() {
-		node* r = tree[0];
-		node* newnode = tree[size - 1];
-		size--;
-		siftdown(0, newnode);
-		return r;
+		if (!empty()) {
+			node* r = tree[0];
+			node* newnode = tree[size - 1];
+			size--;
+			siftdown(0, newnode);
+			return r;
+		}
+		else return nullptr;
+	}
+	void insert(node* i) {
+		tree[size] = i;
+		size++;
+		siftup(size - 1, i);
 	}
 	bool empty() {
 		return size == 0;
@@ -88,4 +100,15 @@ public:
 		if (!empty()) return tree[0];
 		else return nullptr;
 	}
+	node** heapsort() {
+		node** ans = new node * [size];
+		for (int i = 0; !empty(); i++) {
+			ans[i] = delroot();
+		}
+		return ans;
+	}
+private:
+	int size;
+	int msize;
+	std::vector<node*> tree;
 };
