@@ -99,5 +99,6 @@ inline void kruskal() {
         std::cout<< mst[i] <<' ';
     }
     delete[] mst;
+    delete[] ans;
     std::cout << std::endl;
 }
